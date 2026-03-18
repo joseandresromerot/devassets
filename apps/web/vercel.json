@@ -1,3 +1,4 @@
 {
-  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile"
+  "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
+  "buildCommand": "cd ../.. && pnpm --filter @devassets/server exec prisma generate && pnpm --filter @devassets/web run build"
 }
