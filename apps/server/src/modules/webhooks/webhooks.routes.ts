@@ -4,10 +4,6 @@ import { prisma } from "../../lib/prisma"
 import { clearCart } from "../cart/cart.service"
 
 export const webhooksRoutes = async (app: FastifyInstance) => {
-  app.addContentTypeParser("application/json", { parseAs: "buffer" }, (req, body, done) => {
-    done(null, body)
-  })
-
   app.post("/stripe", async (request, reply) => {
     const sig = request.headers["stripe-signature"]
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
@@ -16,9 +12,14 @@ export const webhooksRoutes = async (app: FastifyInstance) => {
       return reply.status(400).send({ error: "Missing stripe signature" })
     }
 
+    const rawBody = (request as unknown as Record<string, unknown>).rawBody as Buffer
+    if (!rawBody) {
+      return reply.status(400).send({ error: "Missing raw body" })
+    }
+
     let event
     try {
-      event = stripe.webhooks.constructEvent(request.body as Buffer, sig, webhookSecret)
+      event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
     } catch (err) {
       const message = err instanceof Error ? err.message : "Webhook error"
       return reply.status(400).send({ error: `Webhook Error: ${message}` })

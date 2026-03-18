@@ -15,7 +15,7 @@ export const AddToCartButton = ({ productId }: Props) => {
 
   const handleClick = async () => {
     if (!session) {
-      signIn("google")
+      signIn("google", { callbackUrl: window.location.href })
       return
     }
 

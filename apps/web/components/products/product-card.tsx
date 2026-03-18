@@ -8,6 +8,7 @@ type Props = { product: Product }
 export const ProductCard = ({ product }: Props) => (
   <Link
     href={`/products/${product.id}`}
+    data-testid="product-card"
     className="group flex flex-col rounded-2xl bg-[#18181b] border border-[#3f3f46]/50 overflow-hidden hover:border-[#6366f1]/40 transition-all duration-300 hover:-translate-y-1"
   >
     <div className="relative h-48 bg-[#27272a] overflow-hidden">
@@ -47,7 +48,7 @@ export const ProductCard = ({ product }: Props) => (
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-[#3f3f46]/50">
-        <span className="text-xl font-bold text-[#fafafa]">{formatPrice(product.price)}</span>
+        <span data-testid="product-price" className="text-xl font-bold text-[#fafafa]">{formatPrice(product.price)}</span>
         <span className="text-sm text-[#6366f1] font-medium group-hover:underline">
           View details →
         </span>

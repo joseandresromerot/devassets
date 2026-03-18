@@ -20,6 +20,21 @@ async function bootstrap() {
   await corsPlugin(app)
   await authPlugin(app)
 
+  // Preserve raw body for Stripe webhook signature verification
+  app.addHook("preParsing", async (request, _reply, payload) => {
+    const chunks: Buffer[] = []
+    for await (const chunk of payload) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)))
+    }
+    const raw = Buffer.concat(chunks)
+    ;(request as unknown as Record<string, unknown>).rawBody = raw
+    const { Readable } = await import("stream")
+    const stream = new Readable()
+    stream.push(raw)
+    stream.push(null)
+    return stream
+  })
+
   app.get("/health", async () => ({ status: "ok", version: "1.0.0" }))
 
   await app.register(productsRoutes, { prefix: "/api/products" })

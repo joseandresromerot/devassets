@@ -16,7 +16,7 @@ const serverFetch = async (path: string, options: RequestOptions = {}) => {
   const res = await fetch(`${API_URL}${path}`, {
     method: options.method ?? "GET",
     headers: {
-      "Content-Type": "application/json",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
       Authorization: `Bearer ${token}`,
     },
     body: options.body ? JSON.stringify(options.body) : undefined,

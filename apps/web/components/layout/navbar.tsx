@@ -99,7 +99,7 @@ export const Navbar = () => {
             </div>
           ) : (
             <button
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", { callbackUrl: window.location.href })}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors",
                 "bg-[#6366f1] text-white hover:bg-[#4f46e5]"
